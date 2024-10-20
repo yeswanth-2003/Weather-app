@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        *{
+            font-family: "Agdasima", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            background-color: black;
+        }
+        .card{
+            width: 30%;
+            margin-left: 35%;
+            color: #342626;
+            margin-top: 60px;
+            text-align: center;
+            border-radius: 30px;
+            padding: 40px 35px;
+            background-image: linear-gradient(to right bottom, #6bd6ec, #68d8c9, #8dd49c, #bdc976, #ecb76b);        }
+        .search{
+            background: transparent;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .search input{
+            border: 0;
+            outline: 0;
+            background: #ebfffc;
+            color: #555;
+            height: 20px;
+            padding: 10px 25px;
+            border-radius: 30px;
+            flex: 1;
+            font-size: 18px;
+        }
+        .search button{
+            border: 0;
+            outline: 0;
+            background: #ebfffc;
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 10px;
+
+        }
+        .search img{
+            background: transparent;
+            width: 15px;
+        }
+        .weather{
+            background: transparent;
+        }
+        .weathericon{
+            background: transparent;
+            width: 170px;
+            height: 170px;
+        }
+        .weather h1{
+            background: transparent;
+            font-size: 80px;
+            font-weight: 500;
+            margin-top: -20px;
+        }
+        .weather h2{
+            background: transparent;
+            font-size: 45px;
+            font-weight: 400;
+            margin-top: -50px;
+
+        }
+        .details{
+            width: 80%;
+            margin-left: 10%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        .col{
+            background: transparent;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .col img{
+            width: 60px;
+            margin-right: 10px;
+            background: transparent;
+            margin-top: -8px;
+        }
+        .humidity,.wind{
+            font-size: 35px;
+            margin-bottom: -6px;
+            background: transparent;
+        }
+        .col1{
+            margin-top: -35px;
+            background: transparent;
+        }
+        .col1 p{
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter City Name" id="cityInput">
+            <button id="searchButton"><img src="images/search.png"></button>
+        </div>
+        <div class="weather">
+            <img src="images/rain.png" class="weathericon" id="weatherIcon">
+            <h1 class="temp" id="temp">--°C</h1>
+            <h2 class="city" id="city">City</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="images/humidity.png" alt="">
+                    <div class="col1">
+                        <p class="humidity" id="humidity">-- %</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="images/wind.png" alt="">
+                    <div class="col1">
+                        <p class="wind" id="wind">-- Km/Hr</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+    let apiKey = '3d1e5ca44f3943ab822240b57cbb455e';
+
+    let searchButton = document.getElementById('searchButton');
+    let cityInput = document.getElementById('cityInput');
+    let weatherIcon = document.getElementById('weatherIcon');
+    let tempElement = document.getElementById('temp');
+    let cityElement = document.getElementById('city');
+    let humidityElement = document.getElementById('humidity');
+    let windElement = document.getElementById('wind');
+
+    searchButton.addEventListener('click', () => {
+        let city = cityInput.value;
+        if (city) {
+            getWeather(city);
+        } else {
+            alert('Please enter a city name.');
+        }
+    });
+
+    async function getWeather(city) {
+        let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            let response = await fetch(url);
+            let data = await response.json();
+
+            displayWeather(data);
+     
+    }
+
+    async function displayWeather(data) {
+        let { main: { temp, humidity }, wind: { speed }, weather , name} = data;
+        let description = weather[0].description;
+
+        cityElement.textContent = name;
+        tempElement.textContent = `${temp}°C`;
+        humidityElement.textContent = `${humidity}%`;
+        windElement.textContent = `${speed} Km/Hr`;
+
+        if (description.includes('rain')) {
+            weatherIcon.src = 'images/rain.png'; 
+        } else if (description.includes('overcast clouds')) {
+            weatherIcon.src = 'images/clouds.png'; 
+        }  else if (description.includes('drizzle')) {
+            weatherIcon.src = 'images/drizzle.png'; 
+        }  else if (description.includes('wind')) {
+            weatherIcon.src = 'images/wind.png'; 
+        } else if (description.includes('snow')) {
+            weatherIcon.src = 'images/snow.png'; 
+        }  else {
+            weatherIcon.src = 'images/clear.png'; 
+        }
+    }
+</script>
+
+
+
+</html>
