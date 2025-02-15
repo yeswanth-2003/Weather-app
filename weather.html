@@ -164,7 +164,7 @@
     });
 
     async function getWeather(city) {
-        let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+        let url = `https://goweather.herokuapp.com/weather/%7Bcity%7D`;
 
             let response = await fetch(url);
             let data = await response.json();
